@@ -1,9 +1,15 @@
 import { Container, Text, HStack, Button, Stack, VStack, Image, Heading } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux'
+import { getAllCourses } from '../../redux/actions/course';
+import toast from "react-hot-toast";
+import { loadUser } from '../../redux/actions/user';
+import { addToPlaylist } from '../../redux/actions/profile';
 
-const Course = ({ views, title, imageSrc, id, AddToplaylist, creator, description, lecturecount }) => {
+
+const Course = ({ views, title, imageSrc, id, addToPlaylistHandler, creator, description, lecturecount , loading }) => {
   return (
     <VStack className='course' alignItems={["center", "flex-start"]}>
       <Image src={imageSrc} boxSize="60" objectFit={'contain'} alt={title} />
@@ -37,7 +43,14 @@ const Course = ({ views, title, imageSrc, id, AddToplaylist, creator, descriptio
                 <Link to={`/course/${id}`}>
                     <Button colorScheme={'yellow'}>Watch Now</Button>
                 </Link>
-                   <Button variant={"ghost"} colorScheme={'yellow'} onClick={() => AddToplaylist(id)}>Add to PlayList</Button>
+                   <Button 
+                   isLoading={loading}
+                   variant={'ghost'}
+                   colorScheme={'yellow'}
+                   onClick={() => addToPlaylistHandler(id)}
+                   
+
+                   >Add to PlayList</Button>
 
                 
            </Stack>     
@@ -49,9 +62,7 @@ const Courses = () => {
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('');
 
-  const Addtoplaylist = () =>{
-    console.log("Added")
-  }
+ 
 
   const categories = [
     'Web Development',
@@ -61,6 +72,26 @@ const Courses = () => {
     'Game Development',
     'DSA',
   ];
+  const {loading , courses , message, error  } = useSelector(state=> state.course);
+  const dispatch = useDispatch();
+
+  const addToPlaylistHandler = async couseId => {
+    await dispatch(addToPlaylist(couseId));
+    dispatch(loadUser());
+  };
+
+  useEffect(() =>{
+    dispatch(getAllCourses(category ,keyword));
+    if(error){
+      toast.error(error);
+      dispatch({type : 'clearError'})
+    }
+    if(message){
+      toast.success(message);
+      dispatch({type : 'clearMessage'})
+    }
+  },[category,keyword ,dispatch , error , message])
+  
 
   return (
     <Container minH={'95vh'} maxW="container.lg" paddingY={'8'}>
@@ -88,17 +119,24 @@ const Courses = () => {
         justifyContent={["flex-start ", "space-evenly"]}
         alignItems={['center', 'flex-start']}
       >
-
-        <Course
-          title={"Complete Web Development Course"}
-          description={"MERN Stack"}
-          views={"1M+"}
-          imageSrc={
-                 "https://developerguru.in/images/courses/mern_stack.gif"          }
-          creator={"Sejal Khilari"}
-          lecturecount={"40+hrs"}
-          Addtoplaylist={Addtoplaylist}
-        />
+         {courses.length > 0 ? (
+          courses.map(item => (
+            <Course
+              key={item._id}
+              title={item.title}
+              description={item.description}
+              views={item.views}
+              imageSrc={item.poster.url}
+              id={item._id}
+              creator={item.createdBy}
+              lectureCount={item.numOfVideos}
+              addToPlaylistHandler={addToPlaylistHandler}
+              loading={loading}
+            />
+          ))
+        ) : (
+          <Heading mt="4" children="Courses Not Found" />
+        )}
 
       </Stack>
 
