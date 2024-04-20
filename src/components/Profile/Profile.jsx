@@ -97,7 +97,7 @@ import { fileuploadCss } from '../Auth/Register';
               {user.subscription && user.subscription.status === 'active' ? (
                 <Button
                   // isLoading={subscriptionLoading}
-                  // onClick={cancelSubscriptionHandler}
+                  // onClick={}
                   // color={'yellow.500'}
                   // variant="unstyled"
                 >

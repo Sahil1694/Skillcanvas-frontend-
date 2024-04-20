@@ -1,32 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Grid, HStack, Heading, Image, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import cursor from "../../../assets/images/cursor.png";
 import Sidebar from '../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import CourseModal from './CourseModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCourses, getCourseLectures } from '../../../redux/actions/course';
+import { deleteCourse } from '../../../redux/actions/admin';
+import toast from 'react-hot-toast';
 
 const AdminCourses = () => {
-  const courses = [{
-    _id: "123",
-    title: "MERN Stack",
-    category: "Web D",
-    poster: {
-      url: "https://developerguru.in/images/courses/mern_stack.gif",
-    },
-    createdBy: "Sahil Khilari",
-    views: 12,
-    numOfVedios: 70,
-  }];
+  const dispatch = useDispatch();
+  
+  const {courses , lectures} = useSelector(state => state.course)
 
+  const {loading , error , message} = useSelector(state => state.admin)
+
+  
   const { isOpen, onClose, onOpen } = useDisclosure();
-
-  const courseDetailsHandler = (userId) => {
+ 
+  const courseDetailsHandler = (courseId) => {
+    dispatch(getCourseLectures(courseId ))
     onOpen();
   };
 
-  const deleteButtonHandler = (userId) => {
-    console.log(userId);
-    // Replace with actual logic to delete the course
+  const deleteButtonHandler = (courseId) => {
+         dispatch(deleteCourse(courseId));
   };
 
   const deleteLectureButtonHandler = (courseId, lectureId) => {
@@ -39,6 +38,20 @@ const AdminCourses = () => {
     e.preventDefault();
     // You may want to use courseid, title, description, vedio in your logic
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+    dispatch(getAllCourses())
+    
+  }, [dispatch ,error , message ])
+  
 
   return (
     <Grid css={{
@@ -78,6 +91,7 @@ const AdminCourses = () => {
                 deleteButtonHandler={deleteButtonHandler}
                 key={item._id}
                 item={item}
+                loading={loading}
               />
             ))}
           </Tbody>
@@ -90,6 +104,8 @@ const AdminCourses = () => {
         CourseTitle={"MERN Course"}
         deleteButtonHandler={deleteLectureButtonHandler} 
         addLectureHandler={addLectureHandler}
+        lectures= {lectures}
+        loading ={loading}
       />
     </Box>
 
@@ -98,7 +114,7 @@ const AdminCourses = () => {
   );
 };
 
-function Row({ item, courseDetailsHandler, deleteButtonHandler }) {
+function Row({ item, courseDetailsHandler, deleteButtonHandler , loading }) {
   return (
     <Tr>
       <Td>#{item._id}</Td>
@@ -114,12 +130,19 @@ function Row({ item, courseDetailsHandler, deleteButtonHandler }) {
         <HStack justifyContent={'flex-end'} >
           <Button
             onClick={() => courseDetailsHandler(item._id)}
-            variant={"outline"} color={"purple.500"}>
+            variant={"outline"} color={"purple.500"}
+            isLoading = {loading}
+            >
+             
             View Lectures
           </Button>
           <Button
             onClick={() => deleteButtonHandler(item._id)}
-            color={'purple.600'} ml={2}>
+            color={'purple.600'} ml={2}
+            isLoading = {loading}
+
+            >
+              
             <RiDeleteBin7Fill />
           </Button>
         </HStack>

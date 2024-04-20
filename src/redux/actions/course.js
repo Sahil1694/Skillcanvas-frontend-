@@ -36,3 +36,4 @@ export const getCourseLectures = id => async dispatch => {
     });
   }
 };
+ 

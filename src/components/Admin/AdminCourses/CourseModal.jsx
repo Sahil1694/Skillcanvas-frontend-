@@ -1,12 +1,12 @@
-import { Box, Button, Grid, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Grid, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { RiDeleteBin7Fill } from 'react-icons/ri'
 import { fileuploadCss } from '../../Auth/Register';
 
 
-const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, lectures = [], addLectureHandler }) => {
+const CourseModal = ({ isOpen, onClose, id, deleteButtonHandler, CourseTitle, lectures = [], addLectureHandler , loading}) => {
 
-const [title, setTitle] = useState();
+const [title, setTitle]  = useState();
 const [description, setDescription] = useState();
 const [video, setVideo] = useState();
 const [videoPrev, setVideoPrev] = useState();
@@ -47,15 +47,19 @@ const handleClose=()=>{
               </Box>
 
               <Heading children={'Lectures'} size={'lg'} />
-
-              <VideoCard
-                title="Mern Stack"
-                description="This is MERN Stack Course"
-                num={1}
-                lectureId="Lec"
-                courseId={id}
-                deleteButtonHandler={deleteButtonHandler}
-              />
+           
+              {lectures.map((item , i) =>(
+                <VideoCard
+                key={i}
+                  title="item.title"
+                  description="item.description"
+                  num={i++}
+                  lectureId= {item._id}
+                  courseId={id}
+                  deleteButtonHandler={deleteButtonHandler}
+                  isLoading = {loading}
+                />
+              ))}
             </Box>
 <Box>
     <form onSubmit={e=>addLectureHandler(e,id,title,description,video)}>
@@ -104,7 +108,7 @@ const handleClose=()=>{
                     ></video>
                 )
               }
-<Button w={'full'} colorScheme='purple' type='submit' >Upload
+<Button w={'full'} colorScheme='purple' type='submit' isLoading = {loading}>Upload
 </Button>
 
 

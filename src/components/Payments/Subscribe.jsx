@@ -15,6 +15,8 @@ const Subscribe = ({ user }) => {
   const { loading, error, subscriptionId } = useSelector(
     state => state.subscription
   );
+  
+
   const { error: courseError } = useSelector(state => state.course);
 
   const subscribeHandler = async () => {

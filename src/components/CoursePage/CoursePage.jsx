@@ -1,49 +1,46 @@
 import { Box, Grid, Heading, Text, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import introVideo from "../../assets/vedios/intro.mp4"
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useParams } from 'react-router-dom';
+import { getCourseLectures } from '../../redux/actions/course';
+import Loader from '../Layout/Loader/Loader';
 
 
-const CoursePage = () => {
+
+
+const CoursePage = ({user}) => {
    
     // const lectureTitle = "Title";
     const [lectureNumber , setlectureNumber] = useState(0);
 
-    const lectures = [
-       { _id: "sadsadsaa",
-        title: 'sample',
-        description: "sample sechdjfhd dhshds jshsh",
-        vedio:{
-            url: 'sadsad',
-        }
-      },
+   const {lectures , loading}  = useSelector(state =>state.course)
 
-      { _id: "sadasaa",
-        title: 'sample',
-        description: "sample sechdjfhd dhshds jshsh",
-        vedio:{
-            url: 'sadsad',
-        }
-      },
-      { _id: "sadsaaa",
-        title: 'sample',
-        description: "sample sechdjfhd dhshds jshsh",
-        vedio:{
-            url: 'sadsad',
-        }
-      }
-    ]
+    const dispatch = useDispatch();
+    const params = useParams();
+    useEffect(() => {
+      dispatch(getCourseLectures(params.id));
+    }, [dispatch , params.id]);
+
+    if(user.role !== "admin" &&( user.subscription === undefined || user.subscription.status !== "active")){
+      return <Navigate to ={'/subscribe'} />;
+    }
+    
 
 
-  return <Grid minH={'90vh'} templateColumns={['1fr' , '3fr 1fr']}>
-
-    <Box >
+  return (
+    loading ? <Loader />:(
+      <Grid minH={'90vh'} templateColumns={['1fr' , '3fr 1fr']}>{
+         
+        lectures && lectures.length > 0 ?(
+          <>
+          <Box >
     <video 
         width={'100%'}
         controls 
         controlsList='nodownload  noremoteplayback'
         disablePictureInPicture
         disableRemotePlayback
-        src = {introVideo}>
+        src = {lectures[lectureNumber].vedio.url}>
 
         </video>
          
@@ -81,7 +78,15 @@ style={{
         }
     </VStack>
 
+          </>
+        ):
+        <Heading children ="No lectures Availabe" />
+      }
+
+    
   </Grid>
+    )
+  )
 }
 
 export default CoursePage
