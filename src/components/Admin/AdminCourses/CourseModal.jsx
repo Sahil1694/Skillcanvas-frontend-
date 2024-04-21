@@ -51,13 +51,13 @@ const handleClose=()=>{
               {lectures.map((item , i) =>(
                 <VideoCard
                 key={i}
-                  title="item.title"
-                  description="item.description"
+                  title=  {item.title}
+                  description={item.description}
                   num={i++}
                   lectureId= {item._id}
                   courseId={id}
                   deleteButtonHandler={deleteButtonHandler}
-                  isLoading = {loading}
+                  loading = {loading}
                 />
               ))}
             </Box>
@@ -133,7 +133,7 @@ const handleClose=()=>{
 
 export default CourseModal;
 
-function VideoCard({ title, description, num, lectureId, courseId, deleteButtonHandler }) {
+function VideoCard({ title, description, num, lectureId, courseId, deleteButtonHandler , loading}) {
   return (
     <Stack
       direction={['column', 'row']}
@@ -148,6 +148,7 @@ function VideoCard({ title, description, num, lectureId, courseId, deleteButtonH
         <Text children={description} />
       </Box>
       <Button
+        isLoading= {loading}
         color={'purple.600'}
         onClick={() => deleteButtonHandler(courseId, lectureId)}
       >

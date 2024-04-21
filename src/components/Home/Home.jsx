@@ -72,15 +72,6 @@ objectFit={"contain"}/>
       </Box>
 
       <div className="container2">
-        <video 
-        // autoPlay 
-        controls 
-        controlsList='nodownload nofullscreen noremoteplayback'
-        disablePictureInPicture
-        disableRemotePlayback
-        src = {introVideo}>
-
-        </video>
       </div>
     </section>
   );

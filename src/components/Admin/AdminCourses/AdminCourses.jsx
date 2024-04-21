@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Grid, HStack, Heading, Image, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import cursor from "../../../assets/images/cursor.png";
 import Sidebar from '../Sidebar';
@@ -6,7 +6,7 @@ import { RiDeleteBin7Fill } from 'react-icons/ri';
 import CourseModal from './CourseModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCourses, getCourseLectures } from '../../../redux/actions/course';
-import { deleteCourse } from '../../../redux/actions/admin';
+import { addLecture, deleteCourse, deleteLecture } from '../../../redux/actions/admin';
 import toast from 'react-hot-toast';
 
 const AdminCourses = () => {
@@ -18,24 +18,39 @@ const AdminCourses = () => {
 
   
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [courseId , setCourseId] = useState("")
+  const [courseTitle , setCourseTitle] = useState("")
+
  
-  const courseDetailsHandler = (courseId) => {
+  const courseDetailsHandler = (courseId , title) => {
     dispatch(getCourseLectures(courseId ))
     onOpen();
+    setCourseId(courseId);
+    setCourseTitle(title);
   };
 
   const deleteButtonHandler = (courseId) => {
          dispatch(deleteCourse(courseId));
   };
 
-  const deleteLectureButtonHandler = (courseId, lectureId) => {
+  const deleteLectureButtonHandler = async(courseId, lectureId) => {
     console.log(courseId);
     console.log(lectureId);
     // Replace with actual logic to delete the lecture
+    await dispatch(deleteLecture(courseId , lectureId))
+    dispatch(getCourseLectures(courseId));
   };
 
-  const addLectureHandler = (e, courseid, title, description, vedio) => {
+  const addLectureHandler = async (e, courseId, title, description, video) => {
     e.preventDefault();
+      const myForm = new FormData()
+
+      myForm.append("title",title);
+      myForm.append("description",description);
+      myForm.append("file",video);
+
+      await  dispatch(addLecture ( courseId,myForm));
+      dispatch(getCourseLectures(courseId));
     // You may want to use courseid, title, description, vedio in your logic
   };
 
@@ -100,8 +115,8 @@ const AdminCourses = () => {
       <CourseModal 
         isOpen={isOpen} 
         onClose={onClose} 
-        id={"absc"}
-        CourseTitle={"MERN Course"}
+        id={courseId}
+        CourseTitle={courseTitle}
         deleteButtonHandler={deleteLectureButtonHandler} 
         addLectureHandler={addLectureHandler}
         lectures= {lectures}
@@ -129,7 +144,7 @@ function Row({ item, courseDetailsHandler, deleteButtonHandler , loading }) {
       <Td isNumeric>
         <HStack justifyContent={'flex-end'} >
           <Button
-            onClick={() => courseDetailsHandler(item._id)}
+            onClick={() => courseDetailsHandler(item._id , item.title)}
             variant={"outline"} color={"purple.500"}
             isLoading = {loading}
             >
