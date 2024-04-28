@@ -22,7 +22,7 @@ const Founder = () =>(
             <Heading children="Sahil Khilari" size={['md' , "xl"]}/>
             <Text
             textAlign={['center' , 'left']}
-            children={"Hii , I am Currently Learning MERN Stack !!"} />
+            children={"Hii....Myself Sahil Khilari. Third Year Engineering Studnet At VIIT,Pune !!"} />
         </VStack>
 
     </Stack>
