@@ -28,21 +28,21 @@ const Founder = () =>(
     </Stack>
 )
 
-const VedioPlayer = ()=>(
-    <Box>
-       <video 
-        // autoPlay 
-        muted
-        loop
-        controls 
-        controlsList='nodownload nofullscreen noremoteplayback'
-        disablePictureInPicture
-        disableRemotePlayback
-        src = {introVideo}>
+// const VedioPlayer = ()=>(
+//     <Box>
+//        <video 
+//         // autoPlay 
+//         muted
+//         loop
+//         controls 
+//         controlsList='nodownload nofullscreen noremoteplayback'
+//         disablePictureInPicture
+//         disableRemotePlayback
+//         src = {introVideo}>
 
-        </video>
-    </Box>
-)
+//         </video>
+//     </Box>
+// )
 
 const TandC = ({termsAndCondition}) =>(
     <Box>
@@ -82,7 +82,7 @@ const About = () => {
         </Link>
 
       </Stack>
-   <VedioPlayer />
+{/*    <VedioPlayer /> */}
 
    <TandC termsAndCondition = {termsAndCondition} />
    
