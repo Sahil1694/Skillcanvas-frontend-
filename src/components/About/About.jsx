@@ -14,7 +14,7 @@ const Founder = () =>(
       
         <VStack>
             <Avatar 
-            src='https://assets.leetcode.com/users/avatars/avatar_1700582720.png'
+            src='https://assets.leetcode.com/users/Sahil_1694/avatar_1719163444.png'
             boxSize={['40','48']}/>
             <Text children="Founder" opacity={0.7} />
         </VStack>
@@ -22,7 +22,7 @@ const Founder = () =>(
             <Heading children="Sahil Khilari" size={['md' , "xl"]}/>
             <Text
             textAlign={['center' , 'left']}
-            children={"Hii , I am Currently Learning MERN Stack !!"} />
+            children={"Hi, I'm Sahil Khilari, a third-year engineering student at VIIT, Pune. I have interned as a Software Engineering Intern at PayPal in Chennai. I'm passionate about creating robust websites and improving user experiences through the power of technology."} />
         </VStack>
 
     </Stack>

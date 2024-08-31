@@ -71,7 +71,7 @@ objectFit={"contain"}/>
       </HStack>
       </Box>
 
-      <div className="container2">
+      {/* <div className="container2">
         <video 
         // autoPlay 
         controls 
@@ -81,7 +81,7 @@ objectFit={"contain"}/>
         src = {introVideo}>
 
         </video>
-      </div>
+      </div> */}
     </section>
   );
 };
