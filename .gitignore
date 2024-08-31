@@ -5,8 +5,7 @@
 /.pnp
 .pnp.js
 # Ignore package.json and package-lock.json files
-package.json
-package-lock.json
+
 
 
 # testing
